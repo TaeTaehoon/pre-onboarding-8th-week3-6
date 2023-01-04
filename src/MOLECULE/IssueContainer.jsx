@@ -41,7 +41,7 @@ function IssueContainer({
         );
       })}
 
-      <NewIssueBtn />
+      <NewIssueBtn issueStatus={status} />
     </StContainerBody>
   );
 }

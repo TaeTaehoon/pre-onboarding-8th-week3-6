@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
-function EditInput({ size, type }) {
-  return <StInput type={type} />;
+function EditInput({ size, type, onChange, name }) {
+  return <StInput type={type} onChange={onChange} name={name} />;
 }
 
 const StInput = styled.input`

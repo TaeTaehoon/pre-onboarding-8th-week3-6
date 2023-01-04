@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
-function EditTextarea() {
-  return <StTextarea />;
+function EditTextarea({ onChange, name }) {
+  return <StTextarea name={name} onChange={onChange} />;
 }
 
 const StTextarea = styled.textarea``;

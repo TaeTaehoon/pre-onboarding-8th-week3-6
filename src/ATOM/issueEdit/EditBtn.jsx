@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 function EditBtn({ size, children }) {
   return <StBtn>{children}</StBtn>;

@@ -1,12 +1,14 @@
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
-import { toggleModal } from "../redux/modules/mainSlice";
+import { toggleModal, changeIssueStatus } from "../redux/modules/mainSlice";
 
-function NewIssueBtn() {
+function NewIssueBtn({ issueStatus }) {
   const dispatch = useDispatch();
-  const handleClickBtn = () => {
-    dispatch(toggleModal());
+  const handleClickBtn = (e) => {
+    e.stopPropagation();
+    dispatch(toggleModal("newIssue"));
+    dispatch(changeIssueStatus(issueStatus));
   };
   return <StBtnBody onClick={handleClickBtn}>+ 새로 만들기</StBtnBody>;
 }
