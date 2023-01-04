@@ -1,34 +1,37 @@
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
 
 import IssueCardTitle from "../ATOM/IssueCardTitle";
 import IssueCardDate from "../ATOM/IssueCardDate";
 import IssueCardStatus from "../ATOM/IssueCardStatus";
 import IssueCardAuthor from "../ATOM/IssueCardAuthor";
-import { useCallback } from "react";
+import { toggleModal } from "../redux/modules/mainSlice";
 
 function IssueCard({
   index,
   title,
   date,
+  issueId,
   status,
   author,
   dragStartHandler,
   dragOverHandler,
   dragDropHandler,
 }) {
-  const handleMouseDown = useCallback((e) => {
+  const dispatch = useDispatch();
+
+  const handleClickCard = (e) => {
     e.stopPropagation();
-    console.log(e);
-  }, []);
-  const handleMouseUp = useCallback((e) => {
-    e.stopPropagation();
-    console.log(e);
-  }, []);
+    dispatch(toggleModal(issueId));
+  };
+
   return (
     <StCardBody
+      onClick={handleClickCard}
       onDragStart={(e) => dragStartHandler(e, index)}
       onDragEnter={(e) => dragOverHandler(e, index, status)}
       onDragEnd={(e) => dragDropHandler(e, index)}
+      id={`N${issueId}`}
       draggable
     >
       <IssueCardTitle>{title}</IssueCardTitle>

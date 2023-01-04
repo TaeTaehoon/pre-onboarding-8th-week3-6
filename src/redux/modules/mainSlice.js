@@ -10,6 +10,7 @@ const initialState = {
     status: "",
     author: "",
     content: "",
+    issueId: -1,
   },
   issues: [
     {
@@ -57,6 +58,11 @@ const mainSlice = createSlice({
         state.isAddNewIssue = true;
       } else {
         state.isAddNewIssue = false;
+        console.log(action.payload);
+        const targetIssue = state.issues.find(
+          (el) => el.issueId === action.payload
+        );
+        state.editContents = { ...targetIssue };
       }
       state.modalOpen = !state.modalOpen;
     },
@@ -65,7 +71,20 @@ const mainSlice = createSlice({
       state.modalOpen = false;
     },
     changeIssueStatus: (state, action) => {
+      console.log(action.payload);
       state.currStatus = action.payload;
+    },
+    updatIssueContents: (state, action) => {
+      console.log(action.payload);
+      state.issues = state.issues.map((el) =>
+        el.issueId === action.payload.issueId
+          ? (el = { ...el, ...action.payload })
+          : el
+      );
+      state.modalOpen = false;
+    },
+    syncData: (state, action) => {
+      state.issues = JSON.parse(localStorage.getItem("issues"));
     },
   },
   extraReducers: {},
@@ -78,6 +97,8 @@ export const {
   toggleModal,
   editContentsInput,
   changeIssueStatus,
+  updatIssueContents,
+  syncData,
 } = mainSlice.actions;
 
 export default mainSlice.reducer;

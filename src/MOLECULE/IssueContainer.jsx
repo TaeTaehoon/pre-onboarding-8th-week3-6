@@ -34,6 +34,7 @@ function IssueContainer({
             date={issue.date}
             status={issue.status}
             author={issue.author}
+            issueId={issue.issueId}
             dragStartHandler={dragStartHandler}
             dragOverHandler={dragOverHandler}
             dragDropHandler={dragDropHandler}
@@ -48,11 +49,13 @@ function IssueContainer({
 
 const StContainerBody = styled.div`
   width: ${({ count }) => `calc(98% / ${count})` || "12rem"};
+  min-height: 15rem;
   border-radius: 1.3rem;
   padding: 1rem;
   background-color: ${({ bgColor }) => bgColor || "red"};
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: flex-start;
   row-gap: 1rem;
   .container-header {

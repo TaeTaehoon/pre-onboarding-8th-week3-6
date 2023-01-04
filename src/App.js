@@ -1,74 +1,58 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import IssueContainer from "./MOLECULE/IssueContainer";
 import MordalPortal from "./ATOM/ModalPortal";
-import { updateIssues } from "./redux/modules/mainSlice";
+import { updateIssues, syncData } from "./redux/modules/mainSlice";
 
 function App() {
   const [containers, setContainers] = useState(["시작전", "진행중", "완료"]);
   const dispatch = useDispatch();
   const issues = useSelector((state) => state.mainSlice.issues);
   const isModalOpen = useSelector((state) => state.mainSlice.modalOpen);
-  // const [issues, setIssues] = useState([
-  //   {
-  //     title: "titlettittlelee",
-  //     date: "2023",
-  //     status: "시작전",
-  //     author: "닷지강",
-  //   },
-  //   {
-  //     title: "ffffffff",
-  //     date: "2024",
-  //     status: "진행중",
-  //     author: "닷지강",
-  //   },
-  //   {
-  //     title: "eeeeee",
-  //     date: "2025",
-  //     status: "완료",
-  //     author: "닷지강",
-  //   },
-  // ]);
+
   const dragIssueCard = useRef();
   const dragOverItem = useRef();
   const dragEnterSection = useRef();
+
   const handleDragStart = (e, position) => {
-    dragIssueCard.current = e.target.children[0].innerText;
+    dragIssueCard.current = e.target.id;
   };
 
   const handleDragEnter = (e, position, status) => {
     e.stopPropagation();
     if (e.target.children[0]?.innerText !== undefined) {
-      dragOverItem.current = e.target.children[0]?.innerText;
+      dragOverItem.current = e.target.id;
     }
 
     dragEnterSection.current = status;
   };
 
   const handleDragDrop = (e, position) => {
-    const dragIssue = issues.find((el) => el.title === dragIssueCard.current);
-    const overIssue = issues.find((el) => el.title === dragOverItem.current);
+    const dragIssue = issues.find(
+      (el) => `N${el.issueId}` === dragIssueCard.current
+    );
+    const overIssue = issues.find(
+      (el) => `N${el.issueId}` === dragOverItem.current
+    );
     const startSection = dragIssue.status;
-    console.log(dragIssue);
-    console.log(overIssue);
     if (startSection === dragEnterSection.current) {
       const initCopyList = [
-        ...issues.filter((el) => el.title !== dragIssue.title),
+        ...issues.filter((el) => el.issueId !== dragIssue.issueId),
       ];
       if (
-        issues.findIndex((el) => el.title === dragIssue.title) <
-        issues.findIndex((el) => el.title === overIssue.title)
+        issues.findIndex((el) => el.issueId === dragIssue.issueId) <
+        issues.findIndex((el) => el.issueId === overIssue.issueId)
       ) {
         initCopyList.splice(
-          initCopyList.findIndex((el) => el.title === overIssue.title) + 1,
+          initCopyList.findIndex((el) => el.issueId === overIssue.issueId) + 1,
           0,
           dragIssue
         );
       } else {
         initCopyList.splice(
-          initCopyList.findIndex((el) => el.title === overIssue.title),
+          initCopyList.findIndex((el) => el.issueId === overIssue.issueId),
           0,
           dragIssue
         );
@@ -76,25 +60,27 @@ function App() {
 
       console.log(initCopyList);
       dispatch(updateIssues(initCopyList));
-      // setIssues(initCopyList);
-      console.log(initCopyList.findIndex((el) => el.title === overIssue.title));
-      console.log("얍!");
-      console.log(initCopyList);
+      console.log(
+        initCopyList.findIndex((el) => el.issueId === overIssue.issueId)
+      );
     } else {
-      // dragIssue.status = dragEnterSection.current;
       dispatch(
         updateIssues([
-          ...issues.filter((el) => el.title !== dragIssueCard.current),
+          ...issues.filter((el) => `N${el.issueId}` !== dragIssueCard.current),
           { ...dragIssue, status: dragEnterSection.current },
         ])
       );
-      // setIssues([
-      //   ...issues.filter((el) => el.title !== dragIssueCard.current),
-      //   { ...dragIssue },
-      // ]);
     }
   };
 
+  window.addEventListener("beforeunload", (e) => {
+    e.preventDefault();
+    window.localStorage.setItem("issues", JSON.stringify(issues));
+  });
+  useEffect(() => {
+    dispatch(syncData());
+  }, [dispatch]);
+  console.log(issues);
   return (
     <MainWrapper>
       <IssueContainer
