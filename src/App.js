@@ -1,30 +1,34 @@
 import { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import IssueContainer from "./MOLECULE/IssueContainer";
+import { updateIssues } from "./redux/modules/mainSlice";
 
 function App() {
   const [containers, setContainers] = useState(["시작전", "진행중", "완료"]);
-  const [issues, setIssues] = useState([
-    {
-      title: "titlettittlelee",
-      date: "2023",
-      status: "시작전",
-      author: "닷지강",
-    },
-    {
-      title: "ffffffff",
-      date: "2024",
-      status: "진행중",
-      author: "닷지강",
-    },
-    {
-      title: "eeeeee",
-      date: "2025",
-      status: "완료",
-      author: "닷지강",
-    },
-  ]);
+  const dispatch = useDispatch();
+  const issues = useSelector((state) => state.mainSlice.issues);
+  // const [issues, setIssues] = useState([
+  //   {
+  //     title: "titlettittlelee",
+  //     date: "2023",
+  //     status: "시작전",
+  //     author: "닷지강",
+  //   },
+  //   {
+  //     title: "ffffffff",
+  //     date: "2024",
+  //     status: "진행중",
+  //     author: "닷지강",
+  //   },
+  //   {
+  //     title: "eeeeee",
+  //     date: "2025",
+  //     status: "완료",
+  //     author: "닷지강",
+  //   },
+  // ]);
   const dragIssueCard = useRef();
   const dragOverItem = useRef();
   const dragEnterSection = useRef();
@@ -69,16 +73,23 @@ function App() {
       }
 
       console.log(initCopyList);
-      setIssues(initCopyList);
+      dispatch(updateIssues(initCopyList));
+      // setIssues(initCopyList);
       console.log(initCopyList.findIndex((el) => el.title === overIssue.title));
       console.log("얍!");
       console.log(initCopyList);
     } else {
-      dragIssue.status = dragEnterSection.current;
-      setIssues([
-        ...issues.filter((el) => el.title !== dragIssueCard.current),
-        { ...dragIssue },
-      ]);
+      // dragIssue.status = dragEnterSection.current;
+      dispatch(
+        updateIssues([
+          ...issues.filter((el) => el.title !== dragIssueCard.current),
+          { ...dragIssue, status: dragEnterSection.current },
+        ])
+      );
+      // setIssues([
+      //   ...issues.filter((el) => el.title !== dragIssueCard.current),
+      //   { ...dragIssue },
+      // ]);
     }
   };
 
