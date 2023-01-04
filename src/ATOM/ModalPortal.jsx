@@ -1,8 +1,8 @@
-import { ReactDOM } from "react-dom";
+import ReactDOM from "react-dom";
 
 import ModalBody from "./ModalBody";
 
-const portal = document.querySelector("#modal-portal");
+const portal = document.querySelector("#modal-root");
 
 function MordalPortal({ children }) {
   return ReactDOM.createPortal(<ModalBody>{children}</ModalBody>, portal);

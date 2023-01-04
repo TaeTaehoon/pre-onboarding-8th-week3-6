@@ -1,8 +1,18 @@
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
+import { toggleModal } from "../redux/modules/mainSlice";
+
 function ModalBody({ children }) {
+  const dispatch = useDispatch();
+  const handleClickBg = (e) => {
+    e.stopPropagation();
+    if (e.target.classList.contains("modal-bg")) {
+      dispatch(toggleModal());
+    }
+  };
   return (
-    <StModalContainer>
+    <StModalContainer onClick={handleClickBg} className="modal-bg">
       <StModalBody>{children}</StModalBody>
     </StModalContainer>
   );

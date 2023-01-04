@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  mordalOpen: false,
+  modalOpen: false,
   issues: [
     {
       title: "titlettittlelee",
@@ -29,7 +29,7 @@ const mainSlice = createSlice({
   initialState,
   reducers: {
     addIssue: (state, action) => {
-      state.issues.push(...action.payload);
+      state.issues.push({ ...action.payload });
     },
     removeIssue: (state, action) => {
       state.issues = state.issues.filter((el) => el.id !== action.payload.id);
@@ -37,10 +37,14 @@ const mainSlice = createSlice({
     updateIssues: (state, action) => {
       state.issues = action.payload;
     },
+    toggleModal: (state, action) => {
+      state.modalOpen = !state.modalOpen;
+    },
   },
   extraReducers: {},
 });
 
-export const { addIssue, removeIssue, updateIssues } = mainSlice.actions;
+export const { addIssue, removeIssue, updateIssues, toggleModal } =
+  mainSlice.actions;
 
 export default mainSlice.reducer;

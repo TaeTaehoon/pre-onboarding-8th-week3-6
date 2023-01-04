@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import IssueContainer from "./MOLECULE/IssueContainer";
+import MordalPortal from "./ATOM/ModalPortal";
 import { updateIssues } from "./redux/modules/mainSlice";
 
 function App() {
   const [containers, setContainers] = useState(["시작전", "진행중", "완료"]);
   const dispatch = useDispatch();
   const issues = useSelector((state) => state.mainSlice.issues);
+  const isModalOpen = useSelector((state) => state.mainSlice.modalOpen);
   // const [issues, setIssues] = useState([
   //   {
   //     title: "titlettittlelee",
@@ -122,6 +124,7 @@ function App() {
         dragOverHandler={handleDragEnter}
         dragDropHandler={handleDragDrop}
       ></IssueContainer>
+      {isModalOpen && <MordalPortal />}
     </MainWrapper>
   );
 }
