@@ -48,7 +48,9 @@ const mainSlice = createSlice({
       state.issues.push({ ...action.payload });
     },
     removeIssue: (state, action) => {
-      state.issues = state.issues.filter((el) => el.id !== action.payload.id);
+      console.log(action.payload);
+      state.issues = state.issues.filter((el) => el.issueId !== action.payload);
+      state.modalOpen = false;
     },
     updateIssues: (state, action) => {
       state.issues = action.payload;
@@ -73,6 +75,7 @@ const mainSlice = createSlice({
     changeIssueStatus: (state, action) => {
       console.log(action.payload);
       state.currStatus = action.payload;
+      state.editContents.status = action.payload;
     },
     updatIssueContents: (state, action) => {
       console.log(action.payload);

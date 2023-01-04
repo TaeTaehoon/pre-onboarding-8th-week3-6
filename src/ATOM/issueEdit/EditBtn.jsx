@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 
-function EditBtn({ size, children }) {
-  return <StBtn>{children}</StBtn>;
+function EditBtn({ size, children, onClick }) {
+  return <StBtn onClick={onClick}>{children}</StBtn>;
 }
 
 const StBtn = styled.button`

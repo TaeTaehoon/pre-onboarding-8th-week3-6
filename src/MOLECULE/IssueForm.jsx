@@ -8,8 +8,8 @@ import EditTextarea from "../ATOM/issueEdit/EditTextarea";
 import EditLabel from "../ATOM/issueEdit/EditLabel";
 import {
   editContentsInput,
-  toggleModal,
   updatIssueContents,
+  removeIssue,
 } from "../redux/modules/mainSlice";
 
 function IssueForm() {
@@ -21,7 +21,7 @@ function IssueForm() {
     content: "",
     date: "",
     author: "",
-    status: targetStatus,
+    status: "",
     issueId: -1,
   });
   const isAddMode = useSelector((state) => state.mainSlice.isAddNewIssue);
@@ -39,6 +39,13 @@ function IssueForm() {
     } else {
       dispatch(updatIssueContents(editContents));
     }
+  };
+
+  const handleClickDeleteBtn = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("111");
+    dispatch(removeIssue(editContents.issueId));
   };
   console.log(editContents);
   useEffect(() => {
@@ -88,7 +95,14 @@ function IssueForm() {
       <EditBtn id="edit-issue-submitBtn">
         {isAddMode ? "추가하기" : "수정하기"}
       </EditBtn>
-      {!isAddMode && <EditBtn id="edit-issue-cancelBtn">취소하기</EditBtn>}
+      {!isAddMode && (
+        <>
+          <EditBtn id="edit-issue-cancelBtn">취소하기</EditBtn>
+          <EditBtn id="edit-issue-deleteBtn" onClick={handleClickDeleteBtn}>
+            삭제하기
+          </EditBtn>
+        </>
+      )}
     </StForm>
   );
 }

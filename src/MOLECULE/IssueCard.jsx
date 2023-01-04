@@ -22,6 +22,7 @@ function IssueCard({
 
   const handleClickCard = (e) => {
     e.stopPropagation();
+    console.log(issueId);
     dispatch(toggleModal(issueId));
   };
 
