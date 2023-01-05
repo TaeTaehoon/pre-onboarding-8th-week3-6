@@ -1,19 +1,22 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import { toggleModal } from "../redux/modules/mainSlice";
 
 function ModalBody({ children }) {
   const dispatch = useDispatch();
+  const isLoading = useSelector((state) => state.mainSlice.isLoading);
   const handleClickBg = (e) => {
     e.stopPropagation();
     if (e.target.classList.contains("modal-bg")) {
       dispatch(toggleModal());
     }
   };
+  console.log(isLoading);
   return (
     <StModalContainer onClick={handleClickBg} className="modal-bg">
-      <StModalBody>{children}</StModalBody>
+      {isLoading && <StLoadingBody>{children}</StLoadingBody>}
+      {!isLoading && <StModalBody>{children}</StModalBody>}
     </StModalContainer>
   );
 }
@@ -30,8 +33,16 @@ const StModalContainer = styled.div`
   z-index: 99;
 `;
 
+const StLoadingBody = styled.div`
+  width: 20rem;
+  height: 20rem;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+`;
+
 const StModalBody = styled.div`
-  width: 128rem;
+  width: 90rem;
   height: 80rem;
   display: flex;
   flex-direction: column;

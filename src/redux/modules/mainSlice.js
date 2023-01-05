@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const initialState = {
   modalOpen: false,
   isAddNewIssue: false,
-  currStatus: "",
+  isLoading: false,
   editContents: {
     title: "",
     date: "",
@@ -12,6 +12,7 @@ const initialState = {
     content: "",
     issueId: -1,
   },
+  authors: ["강태훈", "강머훈", "강태식", "닷지마렵ㄴ"],
   issues: [
     {
       title: "titlettittlelee",
@@ -48,14 +49,18 @@ const mainSlice = createSlice({
       state.issues.push({ ...action.payload });
     },
     removeIssue: (state, action) => {
-      console.log(action.payload);
+      state.isLoading = true;
       state.issues = state.issues.filter((el) => el.issueId !== action.payload);
       state.modalOpen = false;
+      state.isLoading = false;
     },
     updateIssues: (state, action) => {
+      state.isLoading = true;
       state.issues = action.payload;
+      state.isLoading = false;
     },
     toggleModal: (state, action) => {
+      state.isLoading = true;
       if (action.payload === "newIssue") {
         state.isAddNewIssue = true;
       } else {
@@ -67,17 +72,22 @@ const mainSlice = createSlice({
         state.editContents = { ...targetIssue };
       }
       state.modalOpen = !state.modalOpen;
+      state.isLoading = false;
     },
     editContentsInput: (state, action) => {
+      state.isLoading = true;
       state.issues.push(action.payload);
       state.modalOpen = false;
+      state.isLoading = false;
     },
     changeIssueStatus: (state, action) => {
+      state.isLoading = true;
       console.log(action.payload);
-      state.currStatus = action.payload;
       state.editContents.status = action.payload;
+      state.isLoading = false;
     },
     updatIssueContents: (state, action) => {
+      state.isLoading = true;
       console.log(action.payload);
       state.issues = state.issues.map((el) =>
         el.issueId === action.payload.issueId
@@ -85,9 +95,12 @@ const mainSlice = createSlice({
           : el
       );
       state.modalOpen = false;
+      state.isLoading = false;
     },
     syncData: (state, action) => {
+      state.isLoading = true;
       state.issues = JSON.parse(localStorage.getItem("issues"));
+      state.isLoading = false;
     },
   },
   extraReducers: {},

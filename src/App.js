@@ -5,6 +5,7 @@ import styled from "styled-components";
 import IssueContainer from "./MOLECULE/IssueContainer";
 import MordalPortal from "./ATOM/ModalPortal";
 import { updateIssues, syncData } from "./redux/modules/mainSlice";
+import LoadingCircle from "./ATOM/LoadingCircle";
 
 function App() {
   const [containers, setContainers] = useState(["시작전", "진행중", "완료"]);

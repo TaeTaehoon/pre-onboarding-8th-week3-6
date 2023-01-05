@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import EditBtn from "../ATOM/issueEdit/EditBtn";
 import EditInput from "../ATOM/issueEdit/EditInput";
@@ -14,7 +14,10 @@ import {
 
 function IssueForm() {
   const dispatch = useDispatch();
-  const targetStatus = useSelector((state) => state.mainSlice.currStatus);
+  const debouncer = useRef();
+  const [searchInput, setSearchInput] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+  const authors = useSelector((state) => state.mainSlice.authors);
   const preContents = useSelector((state) => state.mainSlice.editContents);
   const [editContents, setEditContents] = useState({
     title: "",
@@ -25,6 +28,23 @@ function IssueForm() {
     issueId: -1,
   });
   const isAddMode = useSelector((state) => state.mainSlice.isAddNewIssue);
+
+  const handleSearchAuthor = (e) => {
+    setSearchInput(e.target.value);
+    if (debouncer.current) {
+      clearTimeout(debouncer.current);
+      setSearchResult([]);
+    }
+    debouncer.current = setTimeout(async function () {
+      if (e.target.value.length !== 0) {
+        console.log(searchInput);
+        const res = null;
+        // setSearchResult([...result, ...reqRes.data]);
+      } else {
+        setSearchResult([]);
+      }
+    }, 200);
+  };
 
   const handleChangeInput = (e) => {
     const key = e.target.name;
@@ -44,16 +64,16 @@ function IssueForm() {
   const handleClickDeleteBtn = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("111");
+
     dispatch(removeIssue(editContents.issueId));
   };
-  console.log(editContents);
+
   useEffect(() => {
     setEditContents({ ...editContents, ...preContents });
   }, []);
   return (
     <StForm onSubmit={handleSubmit}>
-      <div className="issue-title-wrapper">
+      <div className="input-wrapper">
         <EditLabel target="edit-issue-title">제목</EditLabel>
         <EditInput
           id="edit-issue-title"
@@ -61,35 +81,42 @@ function IssueForm() {
           name="title"
           value={editContents.title}
           onChange={handleChangeInput}
+          size="large"
         />
       </div>
-      <div className="issue-content-wrapper">
+      <div className="input-wrapper">
         <EditLabel target="edit-issue-content">내용</EditLabel>
         <EditTextarea
           id="edit=issue-content"
           name="content"
           value={editContents.content}
           onChange={handleChangeInput}
+          size="large"
         />
       </div>
-      <div className="issue-status-wrapper">
+      <div className="input-wrapper">
         <EditLabel target="edit-issue-date">마감기한</EditLabel>
         <EditInput
           id="edit-issue-date"
-          type="text"
+          type="datetime-local"
           name="date"
           value={editContents.date}
           onChange={handleChangeInput}
+          size="large"
         />
       </div>
-      <div className="issue-author-wrapper">
+      <div className="input-wrapper">
         <EditLabel target="edit-issue-author">담당자</EditLabel>
         <EditInput
           id="edit-issue-author"
           type="text"
           name="author"
           value={editContents.author}
-          onChange={handleChangeInput}
+          onChange={(e) => {
+            handleChangeInput(e);
+            handleSearchAuthor(e);
+          }}
+          size="large"
         />
       </div>
       <EditBtn id="edit-issue-submitBtn">
@@ -107,6 +134,14 @@ function IssueForm() {
   );
 }
 
-const StForm = styled.form``;
+const StForm = styled.form`
+  position: relative;
+  .input-wrapper {
+    width: 70rem;
+    height: 15rem;
+    display: flex;
+    justify-content: space-between;
+  }
+`;
 
 export default IssueForm;
